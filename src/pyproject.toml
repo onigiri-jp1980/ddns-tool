@@ -1,0 +1,23 @@
+[project]
+name = "ddns-tool"
+version = "0.1.0"
+description = "lambda api for ddns"
+authors = [
+    {name = "None"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi (>=0.115.12,<0.116.0)",
+    "boto3 (>=1.37.30,<2.0.0)",
+    "uvicorn (>=0.34.0,<0.35.0)",
+    "mangum (>=0.19.0,<0.20.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false

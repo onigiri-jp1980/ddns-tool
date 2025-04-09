@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+      args:
+        CONTAINER_USER: ${CONTAINER_USER:-appuser}
+        CONTAINER_GID: ${CONTAINER_GID:-1000}
+        CONTAINER_UID: ${CONTAINER_UID:-1000}
+    tty: true
+    volumes:
+      - ./src:/app
+      - ./data/app/.cache:/home/${CONTAINER_USER}/.cache
+    ports:
+      - 18000:8000
+    environment:
+      FAST_API_PORT: 8000
+      FAST_API_HOST: 0.0.0.0
+      FAST_API_RELOAD: True
+    command: ["poetry","run","python", "app.py"]

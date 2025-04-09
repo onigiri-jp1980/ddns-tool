@@ -1,0 +1,30 @@
+FROM python:3.12-slim AS builder
+
+ARG CONTAINER_USER
+ARG CONTAINER_UID
+ARG CONTAINER_GID
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Tokyo
+
+WORKDIR /app
+
+COPY ./src/pyproject.toml .
+COPY ./src/poetry.lock .
+COPY ./src/* .
+#基本パッケージ準備＆poetryでインストール
+RUN apt update && \
+  apt upgrade && \
+  DEBIAN_FRONTEND=noninteractive apt install -y sudo tzdata && \
+  apt clean && \
+  pip install --upgrade pip && \
+  pip install poetry && \
+  poetry self add poetry-plugin-export && \
+  poetry export --without-hashes --only main -f requirements.txt > requirements.txt && \
+  pip install --no-cache-dir -r requirements.txt
+
+FROM public.ecr.aws/lambda/python:3.12
+COPY --from=builder /usr/local/lib/python3.12/site-packages /var/task/
+COPY --from=builder /app /var/task
+
+CMD ["app.handler"]
