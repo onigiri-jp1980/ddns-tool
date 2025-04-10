@@ -14,7 +14,12 @@ services:
     ports:
       - 18000:8000
     environment:
-      FAST_API_PORT: 8000
-      FAST_API_HOST: 0.0.0.0
-      FAST_API_RELOAD: True
+      FASTAPI_PORT: 8000
+      FASTAPI_HOST: 0.0.0.0
+      FASTAPI_RELOAD: True
+      API_KEY: test
+      DOMAIN_NAME: yamashiro.work
+      AWS_REGION: ${AWS_REGION:-ap-northeast-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
     command: ["poetry","run","python", "app.py"]

@@ -9,7 +9,7 @@ ENV TZ=Asia/Tokyo
 #基本パッケージ準備＆poetryインストール
 RUN apt update && \
   apt upgrade && \
-  DEBIAN_FRONTEND=noninteractive apt install -y sudo tzdata && \
+  DEBIAN_FRONTEND=noninteractive apt install -y sudo tzdata less awscli && \
   apt clean && \
   pip install --upgrade pip && \
   pip install poetry && \
