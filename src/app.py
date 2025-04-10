@@ -36,21 +36,18 @@ class LambdaEvents(object):
                     default=None)
 
 
-@app.get('/check')
-async def check_changed(req: requestSchema, lambda_event=Depends(LambdaEvents)):
+@app.post('/update')
+async def update_ip_address(req: requestSchema, lambda_event=Depends(LambdaEvents)):
     ip_addr = lambda_event.get_source_ip_address()
     changed = route53.is_changed(hostname=req.hostname,
                                  domain=req.domain,
                                  ip_addr=ip_addr)
-    return {"detail": "changed." if changed else "not changed."}
-
-
-@app.post('/update')
-async def update_ip_address(req: requestSchema, lambda_event=Depends(LambdaEvents)):
-    ip_addr = lambda_event.get_source_ip_address()
-    return route53.update_record(hostname=req.hostname,
-                                 domain=req.domain,
-                                 ip_addr=ip_addr)
+    if not changed:
+        return {"detail": "not changed. avoiding update."}
+    else:
+        return route53.update_record(hostname=req.hostname,
+                                     domain=req.domain,
+                                     ip_addr=ip_addr)
 
 if __name__ == "__main__" and not app_infra:
     uvicorn.run(
