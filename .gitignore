@@ -174,3 +174,7 @@ cython_debug/
 .pypirc
 
 data/
+
+#for GitHub Actions Simulator
+.sercrets
+.vars
