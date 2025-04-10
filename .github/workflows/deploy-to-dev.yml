@@ -11,6 +11,7 @@ env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.REGISTRY_NAME }}
   ECR_REPOSITORY: ${{vars.IMAGE_REPOSITORY}}
+  IMAGE_REPOSITORY: ${{vars.IMAGE_REPOSITORY}}
   IMAGE_TAG: ${{ vars.IMAGE_TAG }}
   DOCKER_COMPOSE_FILE: ${{vars.DOCKER_COMPOSE_FILE}}
 
