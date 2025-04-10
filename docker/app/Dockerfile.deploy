@@ -1,9 +1,5 @@
 FROM python:3.12-slim AS builder
 
-ARG CONTAINER_USER
-ARG CONTAINER_UID
-ARG CONTAINER_GID
-
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Tokyo
 
@@ -15,8 +11,8 @@ COPY ./src/* .
 #基本パッケージ準備＆poetryでインストール
 RUN apt update && \
   apt upgrade && \
-  DEBIAN_FRONTEND=noninteractive apt install -y sudo tzdata && \
-  apt clean && \
+  DEBIAN_FRONTEND=noninteractive apt install  --no-install-recommends -y sudo tzdata && \
+  apt clean && rm -rf /var/lib/apt/lists/* && \
   pip install --upgrade pip && \
   pip install poetry && \
   poetry self add poetry-plugin-export && \
