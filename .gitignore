@@ -176,5 +176,11 @@ cython_debug/
 data/
 
 #for GitHub Actions Simulator
-.sercrets
+.secrets
 .vars
+
+#terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+terraform.tfstate*

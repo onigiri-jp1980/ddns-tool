@@ -1,0 +1,5 @@
+ecr_repository_name = "microDDNS"
+lambda_function_name = "microDDNS"
+base_domain_name = "yourdomain.tld"
+api_hostname = "microddns"
+lambda_updater_function_name = "update-with-ecr"
