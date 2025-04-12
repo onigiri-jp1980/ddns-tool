@@ -23,9 +23,9 @@ services:
       AWS_REGION: ${AWS_REGION:-ap-northeast-1}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
-    command: ["poetry","run","python", "app.py"]
+    command: ["/usr/local/bin/startup.sh"]
   terraform:
-    container_name: app
+    container_name: terraform
     image: hashicorp/terraform:1.11.4
     volumes: 
       - ./terraform:/work
