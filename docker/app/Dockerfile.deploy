@@ -10,7 +10,7 @@ COPY ./src/poetry.lock .
 COPY ./src/* .
 #基本パッケージ準備＆poetryでインストール
 RUN apt update && \
-  apt upgrade && \
+  apt upgrade -y && \
   DEBIAN_FRONTEND=noninteractive apt install  --no-install-recommends -y sudo tzdata && \
   apt clean && rm -rf /var/lib/apt/lists/* && \
   pip install --upgrade pip && \
@@ -19,6 +19,7 @@ RUN apt update && \
   poetry export --without-hashes --only main -f requirements.txt > requirements.txt && \
   pip install --no-cache-dir -r requirements.txt
 
+# Lambda用公式イメージにパッケージング
 FROM public.ecr.aws/lambda/python:3.12
 COPY --from=builder /usr/local/lib/python3.12/site-packages /var/task/
 COPY --from=builder /app /var/task

@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, Request, Depends
+
 from pydantic import BaseModel
 from mangum import Mangum
 from os import environ as env

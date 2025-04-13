@@ -1,11 +1,14 @@
 import boto3
 import socket
-from pprint import pprint
-
+from glom import glom
 
 class Route53(object):
-  __client__ = boto3.client('route53')
-  __zones__ = __client__.list_hosted_zones()['HostedZones']
+  def __init__(self):
+    try:
+      self.__client__ = boto3.client('route53')
+      self.__zones__ = self.__client__.list_hosted_zones()['HostedZones']
+    except Exception as e:
+      raise e
 
   def find_by_domain_name(self, domain: str):
     zone = [_zone for _zone in self.__zones__ if _zone['Name']
@@ -20,7 +23,7 @@ class Route53(object):
     record = f"{hostname}.{domain}."
     zone_id = self.find_by_domain_name(domain=domain)['Id']
     changes = {
-        'Comment': 'Upsert A record by checkmyip',
+        'Comment': 'Upsert A record by microDDNS',
         'Changes': [{
             'Action': 'UPSERT',
             'ResourceRecordSet': {
@@ -30,10 +33,17 @@ class Route53(object):
                     'ResourceRecords': [{'Value': ip_addr}]}
         }]}
     try:
-      res = self.__client__.change_resource_record_sets(
+      update = self.__client__.change_resource_record_sets(
           HostedZoneId=zone_id,
-          ChangeBatch=changes
-      )
+          ChangeBatch=changes)
+      status_code = glom(update,'RequestMetadata.HTTPStatusCode')
+      res = {"detail":"updated successfully",
+          "statusCode": status_code
+          }
+
     except Exception as e:
-      res = {"detail": e}
+      res = {
+        "statusCode":500,
+        "detail": e
+        }
     return res
