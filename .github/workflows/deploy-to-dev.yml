@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - develop
+    tags:
+      - "release/*"
   workflow_dispatch: # 手動実行もOKにする
 
 env:
