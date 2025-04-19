@@ -1,6 +1,6 @@
 services:
   app:
-    image: ${ECR_REGISTRY}/${IMAGE_REPOSITORY}:${IMAGE_TAG}
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_REPOSITORY}:${IMAGE_TAG}
     platform: linux/amd64
     build:
       context: .

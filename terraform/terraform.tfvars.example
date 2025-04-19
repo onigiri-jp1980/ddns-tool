@@ -1,5 +1,10 @@
+# ECRイメージリポジトリ名
 ecr_repository_name = "microDDNS"
+# Lambda（API）の名称
 lambda_function_name = "microDDNS"
+# microDDNSをデプロイするドメイン名
 base_domain_name = "yourdomain.tld"
+# APIホスト名
 api_hostname = "microddns"
+# イメージ情報更新用Lambda（API）の名称
 lambda_updater_function_name = "update-with-ecr"
