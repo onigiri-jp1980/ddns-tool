@@ -16,8 +16,11 @@ class Route53(object):
     return self.__client__.get_hosted_zone(Id=zone['Id'])['HostedZone']
 
   def is_changed(self, hostname: str, domain: str, ip_addr: str):
-    _h = socket.gethostbyname(f'{hostname}.{domain}.')
-    return not (_h == ip_addr)
+    try:
+      _h = socket.gethostbyname(f'{hostname}.{domain}.')
+      return not (_h == ip_addr)
+    except Exception as e:
+      raise e
 
   def update_record(self, hostname: str, domain: str, ip_addr: str, ttl=300):
     record = f"{hostname}.{domain}."
@@ -47,3 +50,11 @@ class Route53(object):
         "detail": e
         }
     return res
+
+  def is_host_exist(self, host:str, domain:str):
+
+    c_=self.__client__
+    zone=self.find_by_domain_name(domain=domain)
+    resource_record_sets=c_.list_resource_record_sets(HostedZoneId=zone['Id'])['ResourceRecordSets']
+    hosts=[r['Name'] for r in resource_record_sets if r['Name']==f'{host}.{domain}.']
+    return True if hosts != [] else False

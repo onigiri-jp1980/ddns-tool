@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, Request, Depends
-
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from mangum import Mangum
 from os import environ as env
@@ -39,16 +39,31 @@ class LambdaEvents(object):
 
 @app.post('/update')
 async def update_ip_address(req: requestSchema, lambda_event=Depends(LambdaEvents)):
+    content={}
     ip_addr = lambda_event.get_source_ip_address()
-    changed = route53.is_changed(hostname=req.hostname,
-                                 domain=req.domain,
-                                 ip_addr=ip_addr)
-    if not changed:
-        return {"detail": "not changed. avoiding update."}
+    if route53.is_host_exist(host=req.hostname,domain=req.domain):
+        try:
+            changed = route53.is_changed(hostname=req.hostname,
+                                        domain=req.domain,
+                                        ip_addr=ip_addr)
+            if not changed:
+                return {"detail": "not changed. avoiding update."}
+            else:
+                return route53.update_record(hostname=req.hostname,
+                                            domain=req.domain,
+                                            ip_addr=ip_addr)
+        except Exception as e:
+            raise e
     else:
-        return route53.update_record(hostname=req.hostname,
-                                     domain=req.domain,
-                                     ip_addr=ip_addr)
+        status_code = 404
+        content={
+            "detail":f"{req.hostname}.{req.domain} not found in your Route53"
+        }
+    return JSONResponse(
+        status_code=status_code,
+        content=content
+    )
+    
 
 if __name__ == "__main__" and not app_infra:
     uvicorn.run(
